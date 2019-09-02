@@ -22,9 +22,11 @@
 void keys_secp256k1(cx_ecfp_public_key_t *publicKey,
                     cx_ecfp_private_key_t *privateKey,
                     const uint8_t privateKeyData[32]) {
+    io_seproxyhal_io_heartbeat();
     cx_ecfp_init_private_key(CX_CURVE_256K1, privateKeyData, 32, privateKey);
     cx_ecfp_init_public_key(CX_CURVE_256K1, NULL, 0, publicKey);
     cx_ecfp_generate_pair(CX_CURVE_256K1, publicKey, privateKey, 1);
+    io_seproxyhal_io_heartbeat();
 }
 
 int sign_secp256k1(const uint8_t *message,
@@ -34,12 +36,14 @@ int sign_secp256k1(const uint8_t *message,
                    unsigned int *signature_length,
                    cx_ecfp_private_key_t *privateKey) {
     uint8_t message_digest[CX_SHA256_SIZE];
+    io_seproxyhal_io_heartbeat();
     cx_hash_sha256(message, message_length, message_digest, CX_SHA256_SIZE);
 
     cx_ecfp_public_key_t publicKey;
     cx_ecdsa_init_public_key(CX_CURVE_256K1, NULL, 0, &publicKey);
     cx_ecfp_generate_pair(CX_CURVE_256K1, &publicKey, privateKey, 1);
 
+    io_seproxyhal_io_heartbeat();
     unsigned int info = 0;
     *signature_length = cx_ecdsa_sign(
         privateKey,
@@ -52,6 +56,7 @@ int sign_secp256k1(const uint8_t *message,
         &info);
 
     os_memset(&privateKey, 0, sizeof(privateKey));
+    io_seproxyhal_io_heartbeat();
 #ifdef TESTING_ENABLED
     return cx_ecdsa_verify(
             &publicKey,
