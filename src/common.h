@@ -16,6 +16,9 @@
 ********************************************************************************/
 #pragma once
 
+#include "ux.h"
+#include "os_io_seproxyhal.h"
+
 typedef enum {
     SECP256K1 = 0
 } sigtype_t;
