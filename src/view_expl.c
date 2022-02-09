@@ -100,12 +100,12 @@ static const bagl_element_t viewexpl_bagl_keyscrolling_only[] = {
         UI_LabelLineScrolling(2, 16, 19, 96, 11, 0xFFFFFF, 0x000000, (const char *) viewctl_DataKey),
 };
 // -----
-#elif defined(TARGET_NANOX)
+#elif defined(TARGET_NANOX) || defined(TARGET_NANOS2)
 
 void display_next_state(bool is_upper_border);
 
-UX_STEP_NOCB(ux_review_step, 
-    pnn, 
+UX_STEP_NOCB(ux_review_step,
+    pnn,
     {
       &C_icon_eye,
       "Review",
@@ -119,7 +119,7 @@ UX_STEP_INIT(
         display_next_state(true);
     });
 UX_STEP_NOCB(
-    ux_variable_display, 
+    ux_variable_display,
     nnn,
     {
       viewctl_Title,
@@ -493,7 +493,7 @@ void viewexpl_display_ux(int page, int count) {
     } else {
         UX_DISPLAY(viewexpl_bagl_keyscrolling, viewexpl_bagl_prepro);
     }
-#elif defined(TARGET_NANOX)
+#elif defined(TARGET_NANOX) || defined(TARGET_NANOS2)
 
 
 
@@ -509,7 +509,7 @@ void viewexpl_start(int start_page,
 
     viewctl_start(start_page, single_page, ehUpdate, ehReady, ehExit, viewexpl_display_ux);
 
-#if defined(TARGET_NANOX)
+#if defined(TARGET_NANOX) || defined(TARGET_NANOS2)
     current_state = OUT_OF_BORDERS;
 #endif
 

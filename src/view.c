@@ -32,13 +32,13 @@
 #define TRUE  1
 #define FALSE 0
 
-#ifdef TARGET_NANOX
+#if defined(TARGET_NANOX) || defined(TARGET_NANOS2)
 #include "ux.h"
 ux_state_t G_ux;
 bolos_ux_params_t G_ux_params;
-#else // TARGET_NANOX
+#else
 ux_state_t ux;
-#endif
+#endif // TARGET_NANOX || defined(TARGET_NANOS2)
 
 enum UI_STATE view_uiState;
 
@@ -82,7 +82,7 @@ const ux_menu_entry_t menu_about[] = {
         {menu_main, NULL, 2, &C_icon_back, "Back", NULL, 61, 40},
         UX_MENU_END
 };
-#elif defined(TARGET_NANOX)
+#elif defined(TARGET_NANOX) || defined(TARGET_NANOS2)
 //////////////////////////////////////////////////////////////////////
 UX_FLOW_DEF_VALID(
     ux_menu_main_addr_step,
@@ -197,7 +197,7 @@ void view_address_show_main_net(unsigned int unused) {
                    user_view_addr_exit // exit
     );
 
-#if defined(TARGET_NANOX)
+#if defined(TARGET_NANOX) || defined(TARGET_NANOS2)
     ux_flow_init(0, ux_view_address_flow, NULL);
 #endif
 }
@@ -214,7 +214,7 @@ void view_address_show_test_net(unsigned int unused) {
                    user_view_addr_exit // exit
     );
 
-#if defined(TARGET_NANOX)
+#if defined(TARGET_NANOX) || defined(TARGET_NANOS2)
     ux_flow_init(0, ux_view_address_flow, NULL);
 #endif
 }
@@ -230,7 +230,7 @@ void view_tx_show(unsigned int start_page) {
                    NULL,
                    view_display_tx_menu);
 
-#if defined(TARGET_NANOX)
+#if defined(TARGET_NANOX) || defined(TARGET_NANOS2)
     ux_flow_init(0, ux_confirm_full_flow, NULL);
 #endif
 }
@@ -250,7 +250,7 @@ void view_addr_show(unsigned int start_page) {
                    view_addr_exit // exit
     );
 
-#if defined(TARGET_NANOX)
+#if defined(TARGET_NANOX) || defined(TARGET_NANOS2)
     ux_flow_init(0, ux_show_address_flow, NULL);
 #endif
 
@@ -265,7 +265,7 @@ void view_addr_confirm(unsigned int start_page) {
                    ehAccept,
                    ehReject);
 
-#if defined(TARGET_NANOX)
+#if defined(TARGET_NANOX) || defined(TARGET_NANOS2)
     ux_flow_init(0, ux_get_address_flow, NULL);
 #endif
 
@@ -295,7 +295,7 @@ void view_idle(unsigned int ignored) {
     view_uiState = UI_IDLE;
 #if defined(TARGET_NANOS)
     UX_MENU_DISPLAY(0, menu_main, NULL);
-#elif defined(TARGET_NANOX)
+#elif defined(TARGET_NANOX) || defined(TARGET_NANOS2)
     // reserve a display stack slot if none yet
     if(G_ux.stack_count == 0) {
         ux_stack_push();

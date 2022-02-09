@@ -20,7 +20,7 @@
 #include "cx.h"
 #include "view_common.h"
 
-#ifdef TARGET_NANOX
+#if defined(TARGET_NANOX) || defined(TARGET_NANOS2)
 #include "ux.h"
 extern const ux_flow_step_t* const ux_view_address_flow[];
 extern const ux_flow_step_t* const ux_show_address_flow[];

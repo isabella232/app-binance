@@ -37,10 +37,10 @@ APPVERSION_P=7
 
 APP_LOAD_PARAMS = --appFlags 0x200 --delete $(COMMON_LOAD_PARAMS) --path "44'/714'"
 
-ifeq ($(TARGET_NAME), TARGET_NANOX)
-ICONNAME=nanox_app_binance.gif
-else
+ifeq ($(TARGET_NAME), TARGET_NANOS)
 ICONNAME=nanos_app_binance.gif
+else
+ICONNAME=nanox_app_binance.gif
 endif
 
 ############
@@ -58,7 +58,6 @@ DEFINES += HAVE_BAGL HAVE_SPRINTF
 DEFINES += HAVE_IO_USB HAVE_L4_USBLIB IO_USB_MAX_ENDPOINTS=4 IO_HID_EP_LENGTH=64 HAVE_USB_APDU
 DEFINES += LEDGER_MAJOR_VERSION=$(APPVERSION_M) LEDGER_MINOR_VERSION=$(APPVERSION_N) LEDGER_PATCH_VERSION=$(APPVERSION_P)
 
-SDK_SOURCE_PATH += lib_u2f
 DEFINES   += HAVE_U2F HAVE_IO_U2F
 DEFINES   += USB_SEGMENT_SIZE=64
 DEFINES   += U2F_PROXY_MAGIC=\"CSM\"
@@ -76,29 +75,31 @@ DEFINES   += LEDGER_SPECIFIC
 DEFINES   += HAVE_WEBUSB WEBUSB_URL_SIZE_B=0 WEBUSB_URL=""
 
 ifeq ($(TARGET_NAME),TARGET_NANOX)
-DEFINES   += IO_SEPROXYHAL_BUFFER_SIZE_B=300
 DEFINES   += HAVE_BLE BLE_COMMAND_TIMEOUT_MS=2000
 DEFINES   += HAVE_BLE_APDU # basic ledger apdu transport over BLE
+endif
 
+ifeq ($(TARGET_NAME),TARGET_NANOS)
+DEFINES   += IO_SEPROXYHAL_BUFFER_SIZE_B=128
+else
+DEFINES   += IO_SEPROXYHAL_BUFFER_SIZE_B=300
 DEFINES   += HAVE_GLO096
 DEFINES   += HAVE_BAGL BAGL_WIDTH=128 BAGL_HEIGHT=64
 DEFINES   += HAVE_BAGL_ELLIPSIS # long label truncation feature
 DEFINES   += HAVE_BAGL_FONT_OPEN_SANS_REGULAR_11PX
 DEFINES   += HAVE_BAGL_FONT_OPEN_SANS_EXTRABOLD_11PX
 DEFINES   += HAVE_BAGL_FONT_OPEN_SANS_LIGHT_16PX
-DEFINES		  += HAVE_UX_FLOW
-else
-DEFINES   += IO_SEPROXYHAL_BUFFER_SIZE_B=128
+DEFINES   += HAVE_UX_FLOW
 endif
 
 # Enabling debug PRINTF
 DEBUG = 0
 ifneq ($(DEBUG),0)
 
-        ifeq ($(TARGET_NAME),TARGET_NANOX)
-                DEFINES   += HAVE_PRINTF PRINTF=mcu_usb_printf
-        else
+        ifeq ($(TARGET_NAME),TARGET_NANOS)
                 DEFINES   += HAVE_PRINTF PRINTF=screen_printf
+        else
+                DEFINES   += HAVE_PRINTF PRINTF=mcu_usb_printf
         endif
 else
         DEFINES   += PRINTF\(...\)=
@@ -140,10 +141,10 @@ include $(BOLOS_SDK)/Makefile.glyphs
 
 APP_SOURCE_PATH += src deps/jsmn/src deps/ledger-zxlib/include deps/ledger-zxlib/src
 SDK_SOURCE_PATH += lib_stusb lib_u2f lib_stusb_impl
+SDK_SOURCE_PATH += lib_ux
 
 ifeq ($(TARGET_NAME),TARGET_NANOX)
-SDK_SOURCE_PATH  += lib_blewbxx lib_blewbxx_impl
-SDK_SOURCE_PATH  += lib_ux
+SDK_SOURCE_PATH += lib_blewbxx lib_blewbxx_impl
 endif
 
 all: default
@@ -165,4 +166,4 @@ dep/%.d: %.c Makefile.genericwallet
 
 
 listvariants:
-	@echo VARIANTS COIN binance_chain 
+	@echo VARIANTS COIN binance_chain
